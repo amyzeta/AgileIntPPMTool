@@ -1,6 +1,11 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { createProject } from "../../actions/projectActions";
+import classnames from "classnames";
+import AddProjectFormField from "./AddProjectFormField";
 
-export default class AddProject extends Component {
+class AddProject extends Component {
   constructor() {
     super();
     this.state = {
@@ -8,10 +13,19 @@ export default class AddProject extends Component {
       projectIdentifier: "",
       description: "",
       startDate: "",
-      endDate: ""
+      endDate: "",
+      errors: {}
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
   }
 
   onChange(e) {
@@ -27,10 +41,11 @@ export default class AddProject extends Component {
       startDate: this.state.startDate,
       endDate: this.state.endDate
     };
-    console.log(newProject);
+    this.props.createProject(newProject, this.props.history);
   }
 
   render() {
+    const errors = this.state.errors;
     return (
       <div className="project">
         <div className="container">
@@ -39,55 +54,50 @@ export default class AddProject extends Component {
               <h5 className="display-4 text-center">Create Project form</h5>
               <hr />
               <form onSubmit={this.onSubmit}>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control form-control-lg "
-                    placeholder="Project Name"
-                    name="projectName"
-                    value={this.state.projectName}
-                    onChange={this.onChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control form-control-lg"
-                    placeholder="Unique Project ID"
-                    name="projectIdentifier"
-                    value={this.state.projectIdentifier}
-                    onChange={this.onChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <textarea
-                    className="form-control form-control-lg"
-                    placeholder="Project Description"
-                    name="description"
-                    value={this.state.description}
-                    onChange={this.onChange}
-                  />
-                </div>
+                <AddProjectFormField
+                  tag="input"
+                  type="text"
+                  name="projectName"
+                  placeholder="Project Name"
+                  value={this.state.projectName}
+                  error={errors.projectName}
+                  onChange={this.onChange}
+                />
+                <AddProjectFormField
+                  tag="input"
+                  type="text"
+                  name="projectIdentifier"
+                  placeholder="Project Identifier"
+                  value={this.state.projectIdentifier}
+                  error={errors.projectIdentifier}
+                  onChange={this.onChange}
+                />
+                <AddProjectFormField
+                  tag="textarea"
+                  name="description"
+                  placeholder="Project Description"
+                  value={this.state.description}
+                  error={errors.description}
+                  onChange={this.onChange}
+                />
                 <h6>Start Date</h6>
-                <div className="form-group">
-                  <input
-                    type="date"
-                    className="form-control form-control-lg"
-                    name="startDate"
-                    value={this.state.startDate}
-                    onChange={this.onChange}
-                  />
-                </div>
+                <AddProjectFormField
+                  tag="input"
+                  type="date"
+                  name="startDate"
+                  value={this.state.startDate}
+                  error={errors.startDate}
+                  onChange={this.onChange}
+                />
                 <h6>Estimated End Date</h6>
-                <div className="form-group">
-                  <input
-                    type="date"
-                    className="form-control form-control-lg"
-                    name="endDate"
-                    value={this.state.endDate}
-                    onChange={this.onChange}
-                  />
-                </div>
+                <AddProjectFormField
+                  tag="input"
+                  type="date"
+                  name="endDate"
+                  value={this.state.endDate}
+                  error={errors.endDate}
+                  onChange={this.onChange}
+                />
 
                 <input
                   type="submit"
@@ -101,3 +111,17 @@ export default class AddProject extends Component {
     );
   }
 }
+
+AddProject.propTypes = {
+  createProject: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { createProject }
+)(AddProject);

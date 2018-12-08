@@ -19,7 +19,7 @@ public class Project {
 
     @NotBlank(message = "Project identifier is required")
     @Column(updatable = false, unique = true)
-    @Pattern(regexp = "^[A-Z0-9]{4,5}$", message = "Project identifier must match regex '^[A-Z0-9]{4,5}$'")
+    @Pattern(regexp = "^[A-Z0-9]{4,5}$", message = "Project identifier must consist of 4 or 5 numbers and/or uppercase letters")
     private String projectIdentifier;
     @NotBlank(message = "Project description is required")
     private String description;
