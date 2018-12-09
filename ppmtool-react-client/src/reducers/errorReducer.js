@@ -2,11 +2,11 @@ import { GET_ERRORS } from "../actions/types";
 
 const initialState = {};
 
-export default function(state = initialState, action) {
-  switch (action.type) {
+export default (state = initialState, { type, payload }) => {
+  switch (type) {
     case GET_ERRORS:
-      return action.payload;
+      return payload;
     default:
       return state;
   }
-}
+};
