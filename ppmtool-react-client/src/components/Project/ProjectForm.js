@@ -1,7 +1,8 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import classnames from "classnames";
 
-export default class ProjectForm extends Component {
+class ProjectForm extends Component {
   render() {
     const errors = this.props.errors;
     const fields = [
@@ -72,3 +73,14 @@ export default class ProjectForm extends Component {
     );
   }
 }
+
+ProjectForm.propTypes = {
+  title: PropTypes.string.isRequired,
+  canModifyIdentifier: PropTypes.bool.isRequired,
+  project: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired
+};
+
+export default ProjectForm;

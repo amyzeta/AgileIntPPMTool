@@ -13,6 +13,7 @@ export const createProject = (project, history) => async dispatch => {
       payload: {}
     });
   } catch (error) {
+    console.log(error);
     dispatch({
       type: GET_ERRORS,
       payload: error.response.data
