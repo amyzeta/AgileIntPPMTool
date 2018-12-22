@@ -1,6 +1,7 @@
 package io.agileintelligence.ppmtool.services;
 
 import io.agileintelligence.ppmtool.domain.Project;
+import io.agileintelligence.ppmtool.domain.Task;
 import io.agileintelligence.ppmtool.exceptions.ValidationExceptionFactory;
 import io.agileintelligence.ppmtool.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -16,6 +18,9 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private TaskService taskService;
 
     public Project createProject(final Project project) {
         try {
@@ -41,6 +46,15 @@ public class ProjectService {
 
     public void deleteProject(final Long id) {
         this.projectRepository.delete(getProject(id));
-
     }
+
+    public Task addTask(final Long id, Task task) {
+        Project project = getProject(id);
+        task.setTaskSequence(project.getNextTaskSequence());
+        task.setProject(project);
+
+        taskService.createTask(task);
+        return task;
+    }
+
 }

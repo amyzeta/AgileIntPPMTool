@@ -1,11 +1,13 @@
 package io.agileintelligence.ppmtool.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Project {
@@ -33,8 +35,13 @@ public class Project {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
 
-    public Project() {
-    }
+    @JsonIgnore
+    private Integer taskSequence = 0;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+    @JsonIgnore
+    private List<Task> tasks = new ArrayList<>();
+
 
     public Long getId() {
         return id;
@@ -108,5 +115,25 @@ public class Project {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = new Date();
+    }
+
+    public Integer getTaskSequence() {
+        return taskSequence;
+    }
+
+    public void setTaskSequence(final Integer taskSequence) {
+        this.taskSequence = taskSequence;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(final List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public String getNextTaskSequence() {
+        return projectIdentifier + "-" + ++taskSequence;
     }
 }
