@@ -4,7 +4,6 @@ import io.agileintelligence.ppmtool.domain.Project;
 import io.agileintelligence.ppmtool.domain.Task;
 import io.agileintelligence.ppmtool.exceptions.ValidationExceptionFactory;
 import io.agileintelligence.ppmtool.services.ProjectService;
-import io.agileintelligence.ppmtool.services.TaskService;
 import io.agileintelligence.ppmtool.services.ValidationErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,25 +23,23 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    @Autowired
-    private TaskService taskService;
 
     @Autowired
     private ValidationErrorService validationErrorService;
 
     @PostMapping("")
     public ResponseEntity<?> create(@Valid @RequestBody final Project project, final BindingResult result) {
-        final Optional<ResponseEntity<?>> responseEntity = validationErrorMessage(result);
+        final Optional<ResponseEntity<?>> responseEntity = this.validationErrorService.validationErrorMessage(result);
         return responseEntity.orElseGet(() -> new ResponseEntity<>(projectService.createProject(project), HttpStatus.CREATED));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable final Long id, @Valid @RequestBody final Project project, final BindingResult result) {
-        return validationErrorMessage(result).orElseGet(() -> {
+        return this.validationErrorService.validationErrorMessage(result).orElseGet(() -> {
             if (project.getId() == null) {
                 project.setId(id);
             } else if (!project.getId().equals(id)) {
-                throw ValidationExceptionFactory.forProjectIdentifier("id in path and body do not match");
+                throw ValidationExceptionFactory.forId("id in path and body do not match");
             }
             return new ResponseEntity<>(projectService.updateProject(project), HttpStatus.OK);
         });
@@ -68,20 +65,13 @@ public class ProjectController {
 
     @PostMapping("/{id}/task")
     public ResponseEntity<?> addTask(@PathVariable final Long id, @Valid @RequestBody Task task, final BindingResult result) {
-        return validationErrorMessage(result).orElseGet(() -> new ResponseEntity<Task>(projectService.addTask(id, task), HttpStatus.CREATED));
+        return this.validationErrorService.validationErrorMessage(result)
+                .orElseGet(() -> new ResponseEntity<Task>(projectService.addTask(id, task), HttpStatus.CREATED));
     }
 
     @GetMapping("{id}/task")
-    public ResponseEntity<Collection<Task>> getAllTasks(@PathVariable final Long id) {
-        return new ResponseEntity<>(taskService.getTestsForProject(id), HttpStatus.OK);
+    public ResponseEntity<Collection<Task>> getTasksForProject(@PathVariable final Long id, @RequestParam(required=false) final String taskSequence) {
+        return new ResponseEntity<>(projectService.getTasks(id, taskSequence), HttpStatus.OK);
     }
 
-
-    private Optional<ResponseEntity<?>> validationErrorMessage(final BindingResult result) {
-        if (result.hasErrors()) {
-            return Optional.of(new ResponseEntity<>(validationErrorService.getErrorMap(result.getFieldErrors()), HttpStatus.BAD_REQUEST));
-        } else {
-            return Optional.empty();
-        }
-    }
 }

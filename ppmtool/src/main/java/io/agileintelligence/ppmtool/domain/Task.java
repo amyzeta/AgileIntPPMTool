@@ -1,9 +1,14 @@
 package io.agileintelligence.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -24,6 +29,11 @@ public class Task {
     private Date createdAt;
     private Date updatedAt;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, optional=false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
+    @JsonIdentityReference(alwaysAsId = true)
+    private Project project;
+
     public Project getProject() {
         return project;
     }
@@ -32,9 +42,6 @@ public class Task {
         this.project = project;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JsonIgnore
-    private Project project;
 
     public Long getId() {
         return id;

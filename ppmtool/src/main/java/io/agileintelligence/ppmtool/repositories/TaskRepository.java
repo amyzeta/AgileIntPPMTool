@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface TaskRepository extends CrudRepository<Task, Long> {
 
-    List<Task> findByProjectId(final Long id);
+    List<Task> findByProjectId(Long id);
+
+    Task findByTaskSequence(String taskSequence);
 }

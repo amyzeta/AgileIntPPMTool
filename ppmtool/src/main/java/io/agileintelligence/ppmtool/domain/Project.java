@@ -133,6 +133,7 @@ public class Project {
         this.tasks = tasks;
     }
 
+    @JsonIgnore
     public String getNextTaskSequence() {
         return projectIdentifier + "-" + ++taskSequence;
     }
