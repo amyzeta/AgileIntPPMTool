@@ -31,6 +31,7 @@ public class Project {
     private Date endDate;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(updatable=false)
     private Date createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
@@ -47,7 +48,7 @@ public class Project {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -55,7 +56,7 @@ public class Project {
         return projectName;
     }
 
-    public void setProjectName(String projectName) {
+    public void setProjectName(final String projectName) {
         this.projectName = projectName;
     }
 
@@ -63,7 +64,7 @@ public class Project {
         return projectIdentifier;
     }
 
-    public void setProjectIdentifier(String projectIdentifier) {
+    public void setProjectIdentifier(final String projectIdentifier) {
         this.projectIdentifier = projectIdentifier;
     }
 
@@ -71,7 +72,7 @@ public class Project {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -79,7 +80,7 @@ public class Project {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(final Date startDate) {
         this.startDate = startDate;
     }
 
@@ -87,7 +88,7 @@ public class Project {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(final Date endDate) {
         this.endDate = endDate;
     }
 
@@ -95,7 +96,7 @@ public class Project {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(final Date createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -103,7 +104,7 @@ public class Project {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(final Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 

@@ -26,12 +26,12 @@ public class Task {
     private String status = "TO_DO";
     private Integer priority = 3;
     private Date dueDate;
+    @Column(updatable=false)
     private Date createdAt;
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, optional=false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnore
     private Project project;
 
     public Project getProject() {
@@ -138,5 +138,10 @@ public class Task {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
+    }
+
+    @JsonIgnore
+    public boolean belongsTo(final Long projectId) {
+        return project.getId().equals(projectId);
     }
 }
