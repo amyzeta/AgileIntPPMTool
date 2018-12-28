@@ -30,7 +30,8 @@ public class Task {
     private Date createdAt;
     private Date updatedAt;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, optional=false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable=false)
     @JsonIgnore
     private Project project;
 

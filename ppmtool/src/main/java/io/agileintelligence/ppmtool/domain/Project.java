@@ -39,7 +39,7 @@ public class Project {
     @JsonIgnore
     private Integer taskSequence = 0;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, orphanRemoval=true, mappedBy = "project")
     @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
 

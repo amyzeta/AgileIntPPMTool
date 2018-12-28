@@ -88,6 +88,11 @@ public class ProjectController {
             }
             return new ResponseEntity<>(projectService.updateTask(id, task), HttpStatus.OK);
         });
+    }
 
+    @DeleteMapping("/{id}/task/{taskId}")
+    public ResponseEntity<String> deleteTask(@PathVariable final Long id, @PathVariable final Long taskId) {
+        projectService.deleteTask(id, taskId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

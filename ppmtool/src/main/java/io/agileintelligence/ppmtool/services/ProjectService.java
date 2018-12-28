@@ -59,6 +59,7 @@ public class ProjectService {
     }
 
     public void deleteProject(final Long id) {
+        // don't use deleteById because the error message is not so nice when project does not exist
         this.projectRepository.delete(getProject(id));
     }
 
@@ -98,5 +99,9 @@ public class ProjectService {
         this.taskRepository.save(task);
         entityManager.clear();
         return getTask(id, task.getId());
+    }
+
+    public void deleteTask(final Long id, final Long taskId) {
+        this.taskRepository.delete(getTask(id, taskId));
     }
 }
