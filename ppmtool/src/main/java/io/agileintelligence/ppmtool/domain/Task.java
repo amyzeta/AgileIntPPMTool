@@ -23,7 +23,7 @@ public class Task {
     @NotBlank(message = "Please include a project summary")
     private String summary;
     private String acceptanceCriteria;
-    private String status = "TO_DO";
+    private TaskStatus status = TaskStatus.TO_DO;
     private Integer priority = 3;
     private Date dueDate;
     @Column(updatable=false)
@@ -76,11 +76,11 @@ public class Task {
         this.acceptanceCriteria = acceptanceCriteria;
     }
 
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(final String status) {
+    public void setStatus(final TaskStatus status) {
         this.status = status;
     }
 

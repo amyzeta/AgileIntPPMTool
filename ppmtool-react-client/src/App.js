@@ -1,13 +1,15 @@
-import React, { Component } from "react";
-import "./App.css";
-import Dashboard from "./components/Dashboard";
-import Header from "./components/Layout/Header";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import AddProject from "./components/Project/AddProject";
-import UpdateProject from "./components/Project/UpdateProject";
-import { Provider } from "react-redux";
-import store from "./store";
+import React, { Component } from 'react';
+import './App.css';
+import Dashboard from './components/Dashboard';
+import Header from './components/Layout/Header';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import AddProject from './components/Project/AddProject';
+import UpdateProject from './components/Project/UpdateProject';
+import TaskBoard from './components/Task/TaskBoard';
+import { Provider } from 'react-redux';
+import store from './store';
+import AddTask from './components/Task/AddTask';
 
 class App extends Component {
   render() {
@@ -19,6 +21,8 @@ class App extends Component {
             <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="/addProject" component={AddProject} />
             <Route exact path="/updateProject/:id" component={UpdateProject} />
+            <Route exact path="/taskBoard/:projectId" component={TaskBoard} />
+            <Route exact path="/addTask/:projectId" component={AddTask} />
           </div>
         </Router>
       </Provider>
