@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Task from './Task';
 import PropTypes from 'prop-types';
+import { Status } from './TaskTypes';
 
 export default class TaskBoardColumn extends Component {
   render() {
@@ -11,7 +12,7 @@ export default class TaskBoardColumn extends Component {
       <div className="col-md-4">
         <div className="card text-center mb-2">
           <div className={`card-header ${this.props.taskStyles}`}>
-            <h3>{this.props.title}</h3>
+            <h3>{Status[this.props.status]}</h3>
           </div>
         </div>
         {tasks}

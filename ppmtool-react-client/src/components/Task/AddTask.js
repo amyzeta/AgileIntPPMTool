@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { addTask } from '../../actions/taskActions';
 import PropTypes from 'prop-types';
 import ItemForm from '../ItemForm';
-import Priority from './Priority';
+import { Priority, Status } from './TaskTypes';
 
 class AddTask extends Component {
   constructor(props) {
@@ -65,24 +65,12 @@ class AddTask extends Component {
       {
         tag: 'select',
         name: 'priority',
-        content: (
-          <React.Fragment>
-            <option value={1}>{Priority[1]}</option>
-            <option value={2}>{Priority[2]}</option>
-            <option value={3}>{Priority[3]}</option>
-          </React.Fragment>
-        )
+        options: Priority
       },
       {
         tag: 'select',
         name: 'status',
-        content: (
-          <React.Fragment>
-            <option value="TO_DO">TO DO</option>
-            <option value="IN_PROGRESS">IN PROGRESS</option>
-            <option value="DONE">DONE</option>
-          </React.Fragment>
-        )
+        options: Status
       }
     ];
     const titleFragment = (

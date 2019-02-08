@@ -25,19 +25,16 @@ class TaskBoard extends Component {
             <TaskBoardColumn
               tasks={tasks}
               status="TO_DO"
-              title="To Do"
               taskStyles="bg-secondary text-white"
             />
             <TaskBoardColumn
               tasks={tasks}
               status="IN_PROGRESS"
-              title="In Progress"
               taskStyles="bg-primary text-white"
             />
             <TaskBoardColumn
               tasks={tasks}
               status="DONE"
-              title="Done"
               taskStyles="bg-success text-white"
             />
           </div>

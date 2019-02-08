@@ -8,6 +8,23 @@ class ItemForm extends Component {
     this.props.submitItem({ ...this.props.item });
   };
 
+  getSelectOptions = type => {
+    if (!type) {
+      return undefined;
+    }
+    const options = [];
+    for (var key in type) {
+      if (type.hasOwnProperty(key)) {
+        options.push(
+          <option key={key} value={key}>
+            {type[key]}
+          </option>
+        );
+      }
+    }
+    return <React.Fragment>{options}</React.Fragment>;
+  };
+
   render() {
     const errors = this.props.errors;
     const fields = this.props.fields;
@@ -31,7 +48,7 @@ class ItemForm extends Component {
                       onChange={this.props.onChange}
                       disabled={f.disabled}
                     >
-                      {f.content}
+                      {this.getSelectOptions(f.options)}
                     </f.tag>
                     {errors[f.name] && (
                       <div className="invalid-feedback">{errors[f.name]} </div>

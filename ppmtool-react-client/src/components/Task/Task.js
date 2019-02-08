@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Priority from './Priority';
+import { Priority } from './TaskTypes';
 
 class Task extends Component {
   render() {
