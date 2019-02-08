@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
+import Priority from './Priority';
 
 class Task extends Component {
   render() {
     const task = this.props.task;
+    const priorityString = Priority[task.priority];
+    const priorityClass = task.priority === 1 ? 'bg-danger text-light' : '';
     return (
       <div className="card mb-1 bg-light">
-        <div className="card-header text-primary">
-          ID: {task.taskSequence} -- Priority: {task.priority}
+        <div className={`card-header text-primary ${priorityClass}`}>
+          ID: {task.taskSequence} -- Priority: {priorityString}
         </div>
         <div className="card-body bg-light">
           <h5 className="card-title">{task.summary}</h5>

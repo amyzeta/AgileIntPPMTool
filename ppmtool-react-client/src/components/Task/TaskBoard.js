@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Task from './Task';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getTasks } from '../../actions/taskActions';
+import TaskBoardColumn from './TaskBoardColumn';
 
 class TaskBoard extends Component {
   componentDidMount() {
@@ -12,9 +12,7 @@ class TaskBoard extends Component {
   }
   render() {
     const projectId = this.props.match.params.projectId;
-    const tasks = this.props.tasks.map(task => (
-      <Task key={task.id} task={task} />
-    ));
+    const tasks = this.props.tasks;
     return (
       <div className="container">
         <Link to={`/addTask/${projectId}`} className="btn btn-primary mb-3">
@@ -24,48 +22,24 @@ class TaskBoard extends Component {
         <hr />
         <div className="container">
           <div className="row">
-            <div className="col-md-4">
-              <div className="card text-center mb-2">
-                <div className="card-header bg-secondary text-white">
-                  <h3>TO DO</h3>
-                </div>
-              </div>
-              {
-                // <!-- SAMPLE TASK STARTS HERE -->
-              }
-              {tasks}
-              {
-                //<!-- SAMPLE TASK ENDS HERE -->
-              }
-            </div>
-            <div className="col-md-4">
-              <div className="card text-center mb-2">
-                <div className="card-header bg-primary text-white">
-                  <h3>In Progress</h3>
-                </div>
-              </div>
-              {
-                // <!-- SAMPLE TASK STARTS HERE -->
-              }
-
-              {
-                //<!-- SAMPLE TASK ENDS HERE -->
-              }
-            </div>
-            <div className="col-md-4">
-              <div className="card text-center mb-2">
-                <div className="card-header bg-success text-white">
-                  <h3>Done</h3>
-                </div>
-              </div>
-              {
-                // <!-- SAMPLE TASK STARTS HERE -->
-              }
-
-              {
-                //<!-- SAMPLE TASK ENDS HERE -->
-              }
-            </div>
+            <TaskBoardColumn
+              tasks={tasks}
+              status="TO_DO"
+              title="To Do"
+              taskStyles="bg-secondary text-white"
+            />
+            <TaskBoardColumn
+              tasks={tasks}
+              status="IN_PROGRESS"
+              title="In Progress"
+              taskStyles="bg-primary text-white"
+            />
+            <TaskBoardColumn
+              tasks={tasks}
+              status="DONE"
+              title="Done"
+              taskStyles="bg-success text-white"
+            />
           </div>
         </div>
       </div>

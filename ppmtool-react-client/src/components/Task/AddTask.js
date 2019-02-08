@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { addTask } from '../../actions/taskActions';
 import PropTypes from 'prop-types';
 import ItemForm from '../ItemForm';
+import Priority from './Priority';
 
 class AddTask extends Component {
   constructor(props) {
@@ -16,7 +17,7 @@ class AddTask extends Component {
         acceptanceCriteria: '',
         dueDate: '',
         priority: 3,
-        status: ''
+        status: 'TO_DO'
       },
       errors: {}
     };
@@ -66,9 +67,9 @@ class AddTask extends Component {
         name: 'priority',
         content: (
           <React.Fragment>
-            <option value={1}>High</option>
-            <option value={2}>Medium</option>
-            <option value={3}>Low</option>
+            <option value={1}>{Priority[1]}</option>
+            <option value={2}>{Priority[2]}</option>
+            <option value={3}>{Priority[3]}</option>
           </React.Fragment>
         )
       },
