@@ -25,7 +25,11 @@ class TaskBoard extends Component {
     if (!isEmpty(error)) {
       return mapToElements(error, function(key, value) {
         return (
-          <div className="alert alert-danger text-center" role="alert">
+          <div
+            className="alert alert-danger text-center"
+            key={key}
+            role="alert"
+          >
             {value}
           </div>
         );
@@ -67,8 +71,7 @@ class TaskBoard extends Component {
 TaskBoard.propTypes = {
   tasks: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  getTasks: PropTypes.func.isRequired,
-  error: PropTypes.object.isRequired
+  getTasks: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
