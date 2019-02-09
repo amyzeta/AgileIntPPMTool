@@ -18,6 +18,7 @@ class UpdateTask extends Component {
     return (
       <WriteTask
         title="Update Task"
+        subtitle={this.props.task && this.props.task.taskSequence}
         projectId={this.props.match.params.projectId}
         submitTask={task =>
           this.props.updateTask(
@@ -36,7 +37,11 @@ UpdateTask.propTypes = {
   updateTask: PropTypes.func.isRequired
 };
 
+const mapStateToProps = state => ({
+  task: state.task.task
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { getTask, updateTask }
 )(UpdateTask);

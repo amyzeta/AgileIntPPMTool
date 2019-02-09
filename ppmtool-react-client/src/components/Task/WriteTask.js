@@ -81,7 +81,7 @@ class WriteTask extends Component {
           Back to Task Board
         </Link>
         <h4 className="display-4 text-center">{this.props.title}</h4>
-        <p className="lead text-center">Project Name + Project Code</p>
+        <p className="lead text-center">{this.props.subtitle}</p>
       </React.Fragment>
     );
     return (
