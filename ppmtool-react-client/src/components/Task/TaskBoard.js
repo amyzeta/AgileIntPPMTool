@@ -7,9 +7,15 @@ import TaskBoardColumn from './TaskBoardColumn';
 import { mapToElements } from '../ComponentUtilities';
 
 class TaskBoard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      projectId: this.props.match.params.projectId
+    };
+  }
+
   componentDidMount() {
-    const projectId = this.props.match.params.projectId;
-    this.props.getTasks(projectId);
+    this.props.getTasks(this.state.projectId);
   }
 
   render() {
@@ -23,7 +29,7 @@ class TaskBoard extends Component {
     const isEmpty = o => !o || Object.keys(o).length === 0;
     const error = this.props.error;
     if (!isEmpty(error)) {
-      return mapToElements(error, function(key, value) {
+      return mapToElements(error, (key, value) => {
         return (
           <div
             className="alert alert-danger text-center"
@@ -35,12 +41,27 @@ class TaskBoard extends Component {
         );
       });
     }
-    const projectId = this.props.match.params.projectId;
     const tasks = this.props.tasks;
+    const statusToClasses = {
+      TO_DO: 'bg-secondary text-white',
+      IN_PROGRESS: 'bg-primary text-white',
+      DONE: 'bg-success text-white'
+    };
+    const columns = mapToElements(statusToClasses, (status, classes) => {
+      return (
+        <TaskBoardColumn
+          key={status}
+          projectId={this.state.projectId}
+          tasks={tasks}
+          status={status}
+          taskClasses={classes}
+        />
+      );
+    });
     return (
       <div className="container">
         <Link
-          to={`/taskBoard/${projectId}/addTask`}
+          to={`/taskBoard/${this.state.projectId}/addTask`}
           className="btn btn-primary mb-3"
         >
           <i className="fas fa-plus-circle"> Create Project Task</i>
@@ -48,23 +69,7 @@ class TaskBoard extends Component {
         <br />
         <hr />
         <div className="container">
-          <div className="row">
-            <TaskBoardColumn
-              tasks={tasks}
-              status="TO_DO"
-              taskStyles="bg-secondary text-white"
-            />
-            <TaskBoardColumn
-              tasks={tasks}
-              status="IN_PROGRESS"
-              taskStyles="bg-primary text-white"
-            />
-            <TaskBoardColumn
-              tasks={tasks}
-              status="DONE"
-              taskStyles="bg-success text-white"
-            />
-          </div>
+          <div className="row">{columns}</div>
         </div>
       </div>
     );

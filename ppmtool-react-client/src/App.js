@@ -10,6 +10,7 @@ import TaskBoard from './components/Task/TaskBoard';
 import { Provider } from 'react-redux';
 import store from './store';
 import AddTask from './components/Task/AddTask';
+import UpdateTask from './components/Task/UpdateTask';
 
 class App extends Component {
   render() {
@@ -26,6 +27,11 @@ class App extends Component {
               exact
               path="/taskBoard/:projectId/addTask"
               component={AddTask}
+            />
+            <Route
+              exact
+              path="/taskBoard/:projectId/updateTask/:taskId"
+              component={UpdateTask}
             />
           </div>
         </Router>

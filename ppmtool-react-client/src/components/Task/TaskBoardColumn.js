@@ -7,11 +7,13 @@ export default class TaskBoardColumn extends Component {
   render() {
     const tasks = this.props.tasks
       .filter(task => task.status === this.props.status)
-      .map(task => <Task key={task.id} task={task} />);
+      .map(task => (
+        <Task key={task.id} projectId={this.props.projectId} task={task} />
+      ));
     return (
-      <div className="col-md-4">
+      <div className="col-md-4" key={this.props.status}>
         <div className="card text-center mb-2">
-          <div className={`card-header ${this.props.taskStyles}`}>
+          <div className={`card-header ${this.props.taskClasses}`}>
             <h3>{Status[this.props.status]}</h3>
           </div>
         </div>
@@ -22,7 +24,8 @@ export default class TaskBoardColumn extends Component {
 }
 
 TaskBoardColumn.propTypes = {
+  projectId: PropTypes.string.isRequired,
   tasks: PropTypes.array.isRequired,
   status: PropTypes.string.isRequired,
-  taskStyles: PropTypes.string.isRequired
+  taskClasses: PropTypes.string.isRequired
 };

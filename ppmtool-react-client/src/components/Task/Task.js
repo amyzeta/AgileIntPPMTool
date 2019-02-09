@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Priority } from './TaskTypes';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 class Task extends Component {
   render() {
@@ -14,14 +16,20 @@ class Task extends Component {
         <div className="card-body bg-light">
           <h5 className="card-title">{task.summary}</h5>
           <p className="card-text text-truncate ">{task.acceptanceCriteria}</p>
-          <a href="#" className="btn btn-primary">
-            View / Update
-          </a>
-
+          <Link
+            to={`/taskBoard/${this.props.projectId}/updateTask/${task.id}`}
+            className="btn btn-primary"
+          >
+            View/Update
+          </Link>
           <button className="btn btn-danger ml-4">Delete</button>
         </div>
       </div>
     );
   }
 }
+Task.propTypes = {
+  projectId: PropTypes.string.isRequired,
+  task: PropTypes.object.isRequired
+};
 export default Task;

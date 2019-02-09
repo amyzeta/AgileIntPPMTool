@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { getProject, updateProject } from "../../actions/projectActions";
-import WriteProject from "./WriteProject";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { getProject, updateProject } from '../../actions/projectActions';
+import WriteProject from './WriteProject';
 
 class UpdateProject extends Component {
   componentDidMount() {
