@@ -1,9 +1,6 @@
 package io.agileintelligence.ppmtool.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -25,9 +22,15 @@ public class Task {
     private String acceptanceCriteria;
     private TaskStatus status = TaskStatus.TO_DO;
     private Integer priority = 3;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(updatable=false)
     private Date createdAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
