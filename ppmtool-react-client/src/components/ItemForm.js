@@ -38,7 +38,7 @@ class ItemForm extends Component {
                       })}
                       placeholder={f.placeholder}
                       name={f.name}
-                      value={this.props.item[f.name]}
+                      value={this.props.item[f.name] || ''}
                       onChange={this.props.onChange}
                       disabled={f.disabled}
                     >
