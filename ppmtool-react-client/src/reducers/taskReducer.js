@@ -21,7 +21,7 @@ export default (state = initialState, { type, payload }) => {
         error: undefined
       };
     case REQUEST_FAILS:
-      return { ...state, error: payload, isFetching: false };
+      return { ...state, errors: payload, isFetching: false };
     case REQUEST_SUCCEEDS:
       return { ...state, isFetching: false };
     case GET_TASKS:

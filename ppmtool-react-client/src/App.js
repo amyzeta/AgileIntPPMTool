@@ -22,7 +22,11 @@ class App extends Component {
             <Route exact path="/addProject" component={AddProject} />
             <Route exact path="/updateProject/:id" component={UpdateProject} />
             <Route exact path="/taskBoard/:projectId" component={TaskBoard} />
-            <Route exact path="/addTask/:projectId" component={AddTask} />
+            <Route
+              exact
+              path="/taskBoard/:projectId/addTask"
+              component={AddTask}
+            />
           </div>
         </Router>
       </Provider>

@@ -39,7 +39,10 @@ class TaskBoard extends Component {
     const tasks = this.props.tasks;
     return (
       <div className="container">
-        <Link to={`/addTask/${projectId}`} className="btn btn-primary mb-3">
+        <Link
+          to={`/taskBoard/${projectId}/addTask`}
+          className="btn btn-primary mb-3"
+        >
           <i className="fas fa-plus-circle"> Create Project Task</i>
         </Link>
         <br />
