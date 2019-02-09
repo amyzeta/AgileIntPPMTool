@@ -18,7 +18,7 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         isFetching: true,
-        error: undefined
+        errors: undefined
       };
     case REQUEST_FAILS:
       return { ...state, errors: payload, isFetching: false };

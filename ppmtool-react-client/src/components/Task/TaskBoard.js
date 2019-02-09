@@ -27,9 +27,9 @@ class TaskBoard extends Component {
       );
     }
     const isEmpty = o => !o || Object.keys(o).length === 0;
-    const error = this.props.error;
-    if (!isEmpty(error)) {
-      return mapToElements(error, (key, value) => {
+    const errors = this.props.errors;
+    if (!isEmpty(errors)) {
+      return mapToElements(errors, (key, value) => {
         return (
           <div
             className="alert alert-danger text-center"
@@ -85,7 +85,7 @@ TaskBoard.propTypes = {
 const mapStateToProps = state => ({
   tasks: state.task.tasks,
   isFetching: state.task.isFetching !== false,
-  error: state.task.error
+  errors: state.task.errors
 });
 
 export default connect(
