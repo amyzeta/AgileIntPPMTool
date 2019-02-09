@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { mapToElements } from './ComponentUtilities';
 
 class ItemForm extends Component {
   onSubmit = e => {
@@ -9,20 +10,13 @@ class ItemForm extends Component {
   };
 
   getSelectOptions = type => {
-    if (!type) {
-      return undefined;
-    }
-    const options = [];
-    for (var key in type) {
-      if (type.hasOwnProperty(key)) {
-        options.push(
-          <option key={key} value={key}>
-            {type[key]}
-          </option>
-        );
-      }
-    }
-    return <React.Fragment>{options}</React.Fragment>;
+    return mapToElements(type, function(key, value) {
+      return (
+        <option key={key} value={key}>
+          {value}
+        </option>
+      );
+    });
   };
 
   render() {

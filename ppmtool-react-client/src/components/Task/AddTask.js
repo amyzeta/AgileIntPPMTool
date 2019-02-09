@@ -76,7 +76,7 @@ class AddTask extends Component {
     const titleFragment = (
       <React.Fragment>
         <Link
-          to={`/taskBoard/${this.props.projectId}`}
+          to={`/taskBoard/${this.state.projectId}`}
           className="btn btn-light"
         >
           Back to Task Board
@@ -110,7 +110,7 @@ AddTask.propTypes = {
 
 const mapStateToProps = state => ({
   task: state.task.task,
-  errors: state.errors
+  errors: state.task.error
 });
 
 export default connect(
