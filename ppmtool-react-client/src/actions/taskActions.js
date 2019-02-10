@@ -6,7 +6,8 @@ import {
   GET_TASK,
   GET_TASKS,
   UPDATE_TASK,
-  ADD_TASK
+  ADD_TASK,
+  DELETE_TASK
 } from './types';
 
 const makeRequest = (
@@ -61,5 +62,17 @@ export const updateTask = (projectId, task, history) => {
     UPDATE_TASK,
     urlRoot => axios.put(`${urlRoot}/${task.id}`, task),
     history
+  );
+};
+export const deleteTask = (projectId, taskId) => {
+  if (!window.confirm('Are you sure you want to to delete this task?')) {
+    return;
+  }
+  return makeRequest(projectId, DELETE_TASK, urlRoot =>
+    axios.delete(`${urlRoot}/${taskId}`).then(() => {
+      return {
+        data: taskId
+      };
+    })
   );
 };
