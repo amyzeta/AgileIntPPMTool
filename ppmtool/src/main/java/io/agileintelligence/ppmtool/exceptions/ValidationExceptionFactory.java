@@ -8,4 +8,5 @@ public class ValidationExceptionFactory {
     public static ValidationException forId(final String message) {
         return new ValidationException("id", message);
     }
+
 }

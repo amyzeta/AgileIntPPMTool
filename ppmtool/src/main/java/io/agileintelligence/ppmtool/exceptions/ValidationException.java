@@ -11,7 +11,7 @@ public class ValidationException extends RuntimeException {
         return field;
     }
 
-    ValidationException(final String field, final String message) {
+    public ValidationException(final String field, final String message) {
         super(message);
         this.field = field;
     }
