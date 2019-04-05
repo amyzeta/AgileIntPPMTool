@@ -5,6 +5,7 @@ import io.agileintelligence.ppmtool.dto.SignupDto;
 import io.agileintelligence.ppmtool.exceptions.ValidationException;
 import io.agileintelligence.ppmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,16 +38,16 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    private User getUser(final String username) {
+        return userRepository.findByUsername(username);
+    }
+
     private User toUser(final SignupDto newUser) {
         User user = new User();
         user.setUsername(newUser.getUsername());
         user.setEncryptedPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
         user.setFullName(newUser.getFullName());
         return user;
-    }
-
-    public User getUser(final String username) {
-        return userRepository.findByUsername(username);
     }
 
 }
