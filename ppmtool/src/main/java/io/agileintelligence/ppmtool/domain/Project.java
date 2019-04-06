@@ -43,6 +43,10 @@ public class Project {
     @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User user;
+
 
     public Long getId() {
         return id;
@@ -137,5 +141,13 @@ public class Project {
     @JsonIgnore
     public String getNextTaskSequence() {
         return projectIdentifier + "-" + ++taskSequence;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(final User user) {
+        this.user = user;
     }
 }

@@ -6,6 +6,7 @@ import io.agileintelligence.ppmtool.exceptions.ValidationException;
 import io.agileintelligence.ppmtool.exceptions.ValidationExceptionFactory;
 import io.agileintelligence.ppmtool.repositories.ProjectRepository;
 import io.agileintelligence.ppmtool.repositories.TaskRepository;
+import io.agileintelligence.ppmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -30,10 +31,14 @@ public class ProjectService {
     @Autowired
     private EntityManager entityManager;
 
-    public Project createProject(final Project project) {
+    @Autowired
+    private UserRepository userRepository;
+
+    public Project createProject(final Project project, final String username) {
         if (project.getId() != null) {
             throw ValidationExceptionFactory.forId("Do not supply an ID when creating");
         }
+        project.setUser(userRepository.findByUsername(username));
         try {
             return projectRepository.save(project);
         } catch (final DataIntegrityViolationException e) {
@@ -41,41 +46,45 @@ public class ProjectService {
         }
     }
 
-    public Project updateProject(final Project project) {
-        final Long id = project.getId();
-        // if you just do a projectRepository.save(), the object returned from getProject() can look like you've updated things like create date and project identifier -
-        // such things appear not to be rejected until commit
-        projectRepository.updateProject(project.getProjectName(), project.getDescription(), project.getStartDate(), project.getEndDate(), id);
-        entityManager.clear(); // not technically necessary right now because we don't have any project in the persistence context
-        return getProject(id);
+    public Project updateProject(final Project project, final String username) {
+        final Project existingProject = getProject(project.getId(), username);
+        existingProject.setProjectName(project.getProjectName());
+        existingProject.setDescription(project.getDescription());
+        existingProject.setStartDate(project.getStartDate());
+        existingProject.setEndDate(project.getEndDate());
+        projectRepository.save(existingProject);
+        entityManager.clear();
+        return existingProject;
     }
 
-    public Project getProject(final Long id) {
-        return projectRepository.findById(id).orElseThrow(() -> ValidationExceptionFactory.forId(String.format("Project id '%s' does not exist", id)));
+    public Project getProject(final Long id, final String username) {
+        return projectRepository.findById(id)
+                .filter(p -> p.getUser().getUsername().equals(username))
+                .orElseThrow(() -> ValidationExceptionFactory.forId(String.format("Project id '%s' does not exist or does not belong to this user", id)));
     }
 
-    public Collection<Project> getAllProjects() {
-        return StreamSupport.stream(this.projectRepository.findAll().spliterator(), false).collect(Collectors.toList());
+    public Collection<Project> getAllProjects(final String username) {
+        return this.userRepository.findByUsername(username).getProjects();
     }
 
-    public void deleteProject(final Long id) {
+    public void deleteProject(final Long id, final String username) {
         // don't use deleteById because the error message is not so nice when project does not exist
-        this.projectRepository.delete(getProject(id));
+        this.projectRepository.delete(getProject(id, username));
     }
 
-    public Task addTask(final Long id, final Task task) {
+    public Task addTask(final Long id, final Task task, final String username) {
         if (task.getId() != null) {
             throw ValidationExceptionFactory.forId("Do not supply an ID when creating");
         }
-        final Project project = getProject(id);
+        final Project project = getProject(id, username);
         task.setTaskSequence(project.getNextTaskSequence());
         task.setProject(project);
         this.taskRepository.save(task);
         return task;
     }
 
-    public Collection<Task> getTasks(final Long id, final String taskSequence) {
-        getProject(id); // will throw exception if project does not exist
+    public Collection<Task> getTasks(final Long id, final String taskSequence, final String username) {
+        getProject(id, username); // will throw exception if project does not exist
         if (taskSequence == null) {
             return this.taskRepository.findByProjectId(id);
         }
@@ -85,23 +94,23 @@ public class ProjectService {
                 .orElseGet(Collections::emptyList);
     }
 
-    public Task getTask(final Long id, final Long taskId) {
-        getProject(id); // will throw exception if project does not exist
+    public Task getTask(final Long id, final Long taskId, final String username) {
+        getProject(id, username); // will throw exception if project does not exist
         return taskRepository.findById(taskId)
                 .filter(t -> t.belongsTo(id))
                 .orElseThrow(() -> ValidationExceptionFactory.forId(String.format("Task id '%s' does not exist or is not for project '%s", taskId, id)));
     }
 
-    public Task updateTask(final Long id, final Task task) {
-        final Project project = getProject(id); // will throw exception if project does not exist
-        getTask(id, task.getId()); // will throw exception if task does not exist or is not for this project
+    public Task updateTask(final Long id, final Task task, final String username) {
+        final Project project = getProject(id, username); // will throw exception if project does not exist
+        getTask(id, task.getId(), username); // will throw exception if task does not exist or is not for this project
         task.setProject(project);
         this.taskRepository.save(task);
         entityManager.clear();
-        return getTask(id, task.getId());
+        return getTask(id, task.getId(), username);
     }
 
-    public void deleteTask(final Long id, final Long taskId) {
-        this.taskRepository.delete(getTask(id, taskId));
+    public void deleteTask(final Long id, final Long taskId, final String username) {
+        this.taskRepository.delete(getTask(id, taskId, username));
     }
 }

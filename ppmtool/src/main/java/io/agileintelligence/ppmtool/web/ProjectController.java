@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -28,71 +29,71 @@ public class ProjectController {
     private ValidationErrorService validationErrorService;
 
     @PostMapping("")
-    public ResponseEntity<?> create(@Valid @RequestBody final Project project, final BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody final Project project, final BindingResult result, final Principal principal) {
         final Optional<ResponseEntity<?>> responseEntity = this.validationErrorService.validationErrorMessage(result);
-        return responseEntity.orElseGet(() -> new ResponseEntity<>(projectService.createProject(project), HttpStatus.CREATED));
+        return responseEntity.orElseGet(() -> new ResponseEntity<>(projectService.createProject(project, principal.getName()), HttpStatus.CREATED));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable final Long id, @Valid @RequestBody final Project project, final BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable final Long id, @Valid @RequestBody final Project project, final BindingResult result, final Principal principal) {
         return this.validationErrorService.validationErrorMessage(result).orElseGet(() -> {
             if (project.getId() == null) {
                 project.setId(id);
             } else if (!project.getId().equals(id)) {
                 throw ValidationExceptionFactory.forId("id in path and body do not match");
             }
-            return new ResponseEntity<>(projectService.updateProject(project), HttpStatus.OK);
+            return new ResponseEntity<>(projectService.updateProject(project, principal.getName()), HttpStatus.OK);
         });
 
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Project> get(@PathVariable final Long id) {
-        final Project project = projectService.getProject(id);
+    public ResponseEntity<Project> get(@PathVariable final Long id, final Principal principal) {
+        final Project project = projectService.getProject(id, principal.getName());
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
     @GetMapping("")
-    public ResponseEntity<Collection<Project>> getAll() {
-        return new ResponseEntity<>(projectService.getAllProjects(), HttpStatus.OK);
+    public ResponseEntity<Collection<Project>> getAll(final Principal principal) {
+        return new ResponseEntity<>(projectService.getAllProjects(principal.getName()), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable final Long id) {
-        projectService.deleteProject(id);
+    public ResponseEntity<String> delete(@PathVariable final Long id, final Principal principal) {
+        projectService.deleteProject(id, principal.getName());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/{id}/task")
-    public ResponseEntity<?> addTask(@PathVariable final Long id, @Valid @RequestBody final Task task, final BindingResult result) {
+    public ResponseEntity<?> addTask(@PathVariable final Long id, @Valid @RequestBody final Task task, final BindingResult result, final Principal principal) {
         return this.validationErrorService.validationErrorMessage(result)
-                .orElseGet(() -> new ResponseEntity<Task>(projectService.addTask(id, task), HttpStatus.CREATED));
+                .orElseGet(() -> new ResponseEntity<Task>(projectService.addTask(id, task, principal.getName()), HttpStatus.CREATED));
     }
 
     @GetMapping("{id}/task")
-    public ResponseEntity<Collection<Task>> getTasksForProject(@PathVariable final Long id, @RequestParam(required=false) final String taskSequence) {
-        return new ResponseEntity<>(projectService.getTasks(id, taskSequence), HttpStatus.OK);
+    public ResponseEntity<Collection<Task>> getTasksForProject(@PathVariable final Long id, @RequestParam(required=false) final String taskSequence, final Principal principal) {
+        return new ResponseEntity<>(projectService.getTasks(id, taskSequence, principal.getName()), HttpStatus.OK);
     }
     @GetMapping("/{id}/task/{taskId}")
-    public ResponseEntity<Task> get(@PathVariable final Long id, @PathVariable final Long taskId) {
-        return new ResponseEntity<>(projectService.getTask(id, taskId), HttpStatus.OK);
+    public ResponseEntity<Task> get(@PathVariable final Long id, @PathVariable final Long taskId, final Principal principal) {
+        return new ResponseEntity<>(projectService.getTask(id, taskId, principal.getName()), HttpStatus.OK);
     }
 
     @PutMapping("/{id}/task/{taskId}")
-    public ResponseEntity<?> update(@PathVariable final Long id, @PathVariable final Long taskId, @Valid @RequestBody final Task task, final BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable final Long id, @PathVariable final Long taskId, @Valid @RequestBody final Task task, final BindingResult result, final Principal principal) {
         return this.validationErrorService.validationErrorMessage(result).orElseGet(() -> {
             if (task.getId() == null) {
                 task.setId(taskId);
             } else if (!task.getId().equals(taskId)) {
                 throw ValidationExceptionFactory.forId("id in path and body do not match");
             }
-            return new ResponseEntity<>(projectService.updateTask(id, task), HttpStatus.OK);
+            return new ResponseEntity<>(projectService.updateTask(id, task, principal.getName()), HttpStatus.OK);
         });
     }
 
     @DeleteMapping("/{id}/task/{taskId}")
-    public ResponseEntity<String> deleteTask(@PathVariable final Long id, @PathVariable final Long taskId) {
-        projectService.deleteTask(id, taskId);
+    public ResponseEntity<String> deleteTask(@PathVariable final Long id, @PathVariable final Long taskId, final Principal principal) {
+        projectService.deleteTask(id, taskId, principal.getName());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

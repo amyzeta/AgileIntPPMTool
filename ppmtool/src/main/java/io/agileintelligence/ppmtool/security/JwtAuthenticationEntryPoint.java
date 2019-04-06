@@ -18,6 +18,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse, final AuthenticationException e) throws IOException, ServletException {
         httpServletResponse.setContentType("application/json");
         httpServletResponse.setStatus(401);
-        httpServletResponse.getWriter().print(new GsonBuilder().create().toJson(Collections.singletonMap("reason", "invalid username or password")));
+        httpServletResponse.getWriter().print(new GsonBuilder().create().toJson(Collections.singletonMap("reason", "Unauthorized")));
     }
 }

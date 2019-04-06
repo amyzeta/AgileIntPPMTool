@@ -12,10 +12,4 @@ import java.util.Date;
 @Repository
 public interface ProjectRepository extends CrudRepository<Project, Long> {
 
-    @Transactional
-    @Modifying
-    @Query("update Project p set p.projectName = ?1, p.description = ?2 , p.startDate = ?3, p.endDate = ?4, p.updatedAt = current_timestamp where p.id = ?5")
-    int updateProject(String projectName, String description, Date startDate, Date endDate, Long id);
-
-
 }

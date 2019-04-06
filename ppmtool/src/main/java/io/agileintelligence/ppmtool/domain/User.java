@@ -1,6 +1,10 @@
 package io.agileintelligence.ppmtool.domain;
 
+import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User {
@@ -8,6 +12,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NaturalId
     @Column(unique=true, nullable=false)
     private String username;
 
@@ -16,6 +21,10 @@ public class User {
 
     @Column(nullable=false)
     private String encryptedPassword;
+
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    private List<Project> projects = new ArrayList<>();
+
 
     public Long getId() {
         return id;
@@ -47,6 +56,14 @@ public class User {
 
     public void setEncryptedPassword(final String encryptedPassword) {
         this.encryptedPassword = encryptedPassword;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(final List<Project> projects) {
+        this.projects = projects;
     }
 
 }
