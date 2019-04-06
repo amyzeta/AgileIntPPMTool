@@ -1,7 +1,6 @@
 package io.agileintelligence.ppmtool.security;
 
 import io.agileintelligence.ppmtool.services.UserDetailsService;
-import io.agileintelligence.ppmtool.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,12 +32,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private  AuthenticationManager authenticationManager;
+
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.cors()
             .and().csrf().disable().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and().authorizeRequests().antMatchers("/api/user/**").permitAll().anyRequest().authenticated();
+            .and().authorizeRequests().antMatchers("/api/user/**").permitAll().anyRequest().authenticated()
+            .and().addFilter(new JwtAuthenticationFilter(authenticationManager)).addFilter(new JwtAuthorizationFilter(authenticationManager));
     }
 
     @Override
