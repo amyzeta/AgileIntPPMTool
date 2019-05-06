@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addTask } from '../../actions/taskActions';
 import PropTypes from 'prop-types';
-
 import WriteTask from './WriteTask';
 
 class AddTask extends Component {
@@ -11,13 +10,7 @@ class AddTask extends Component {
       <WriteTask
         title="Add Task"
         projectId={this.props.match.params.projectId}
-        submitTask={task =>
-          this.props.addTask(
-            this.props.match.params.projectId,
-            task,
-            this.props.history
-          )
-        }
+        submitTask={task => this.props.addTask(this.props.match.params.projectId, task, this.props.history)}
       />
     );
   }

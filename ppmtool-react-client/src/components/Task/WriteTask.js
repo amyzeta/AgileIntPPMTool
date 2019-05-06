@@ -74,10 +74,7 @@ class WriteTask extends Component {
     ];
     const titleFragment = (
       <React.Fragment>
-        <Link
-          to={`/taskBoard/${this.state.projectId}`}
-          className="btn btn-light"
-        >
+        <Link to={`/taskBoard/${this.state.projectId}`} className="btn btn-light">
           Back to Task Board
         </Link>
         <h4 className="display-4 text-center">{this.props.title}</h4>
@@ -107,7 +104,7 @@ WriteTask.propTypes = {
 
 const mapStateToProps = state => ({
   task: state.task.task,
-  errors: state.task.errors
+  errors: state.request.errors
 });
 
 export default connect(

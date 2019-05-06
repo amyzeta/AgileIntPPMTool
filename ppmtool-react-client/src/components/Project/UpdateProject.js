@@ -15,9 +15,7 @@ class UpdateProject extends Component {
         project={this.props.project}
         title="Update Project"
         canModifyIdentifier={false}
-        submitProject={project =>
-          this.props.updateProject(project, this.props.history)
-        }
+        submitProject={project => this.props.updateProject(project, this.props.history)}
       />
     );
   }

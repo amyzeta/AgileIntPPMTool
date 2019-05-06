@@ -31,11 +31,7 @@ class TaskBoard extends Component {
     if (!isEmpty(errors)) {
       return mapToElements(errors, (key, value) => {
         return (
-          <div
-            className="alert alert-danger text-center"
-            key={key}
-            role="alert"
-          >
+          <div className="alert alert-danger text-center" key={key} role="alert">
             {value}
           </div>
         );
@@ -60,10 +56,7 @@ class TaskBoard extends Component {
     });
     return (
       <div className="container">
-        <Link
-          to={`/taskBoard/${this.state.projectId}/addTask`}
-          className="btn btn-primary mb-3"
-        >
+        <Link to={`/taskBoard/${this.state.projectId}/addTask`} className="btn btn-primary mb-3">
           <i className="fas fa-plus-circle"> Create Project Task</i>
         </Link>
         <br />
@@ -84,8 +77,8 @@ TaskBoard.propTypes = {
 
 const mapStateToProps = state => ({
   tasks: state.task.tasks,
-  isFetching: state.task.isFetching !== false,
-  errors: state.task.errors
+  isFetching: state.request.isFetching !== false,
+  errors: state.request.errors
 });
 
 export default connect(

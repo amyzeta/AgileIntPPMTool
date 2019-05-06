@@ -10,10 +10,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @RestController
 @ControllerAdvice
 public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+    private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
+
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
@@ -26,4 +29,5 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         // spring's default handling of HttpMessageNotReadableException puts nothing at all in the body which slows me down realising what went wrong
         return new ResponseEntity<>("An error occurred parsing the request body. See server log for details.", HttpStatus.BAD_REQUEST);
     }
+
 }

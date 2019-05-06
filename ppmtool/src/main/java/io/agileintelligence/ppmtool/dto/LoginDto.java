@@ -1,6 +1,9 @@
 package io.agileintelligence.ppmtool.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class LoginDto {
+
     private String username;
 
     private String password;

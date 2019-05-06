@@ -11,6 +11,10 @@ import { Provider } from 'react-redux';
 import store from './store';
 import AddTask from './components/Task/AddTask';
 import UpdateTask from './components/Task/UpdateTask';
+import Landing from './components/Layout/Landing';
+import Register from './components/UserManagement/Register';
+import Login from './components/UserManagement/Login';
+import SecuredRoute from './components/UserManagement/SecuredRoute';
 
 class App extends Component {
   render() {
@@ -19,20 +23,22 @@ class App extends Component {
         <Router>
           <div className="App">
             <Header />
-            <Route exact path="/dashboard" component={Dashboard} />
-            <Route exact path="/addProject" component={AddProject} />
-            <Route exact path="/updateProject/:id" component={UpdateProject} />
-            <Route exact path="/taskBoard/:projectId" component={TaskBoard} />
-            <Route
-              exact
-              path="/taskBoard/:projectId/addTask"
-              component={AddTask}
-            />
-            <Route
-              exact
-              path="/taskBoard/:projectId/updateTask/:taskId"
-              component={UpdateTask}
-            />
+            {
+              // public routes
+            }
+            <Route exact path="/" component={Landing} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/login" component={Login} />
+
+            {
+              // private routes
+            }
+            <SecuredRoute exact path="/dashboard" component={Dashboard} />
+            <SecuredRoute exact path="/addProject" component={AddProject} />
+            <SecuredRoute exact path="/updateProject/:id" component={UpdateProject} />
+            <SecuredRoute exact path="/taskBoard/:projectId" component={TaskBoard} />
+            <SecuredRoute exact path="/taskBoard/:projectId/addTask" component={AddTask} />
+            <SecuredRoute exact path="/taskBoard/:projectId/updateTask/:taskId" component={UpdateTask} />
           </div>
         </Router>
       </Provider>

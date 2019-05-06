@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Optional;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
@@ -25,25 +26,39 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain) throws IOException, ServletException {
-        Optional.ofNullable(request.getHeader("Authorization"))
+        final Optional<Claims> claims = Optional.ofNullable(request.getHeader(SecurityConstants.AUTHORIZATION_HEADER))
                 .filter(h -> h.startsWith(SecurityConstants.TOKEN_PREFIX))
                 .map(h -> h.substring(SecurityConstants.TOKEN_PREFIX.length()))
-                .flatMap(this::getAuthentication)
+                .map(this::getClaims);
+
+        claims.map(Claims::getSubject)
+                .map(JwtAuthorizationFilter::tokenForUserName)
                 .ifPresent(t -> SecurityContextHolder.getContext().setAuthentication(t));
+
+        claims.ifPresent( c-> {
+            if (needsRenewal(c)) {
+                final String token = JwtToken.generate(c.getSubject());
+                response.setHeader(SecurityConstants.AUTHORIZATION_HEADER, token);
+            }
+        });
         chain.doFilter(request, response);
     }
 
-    private Optional<UsernamePasswordAuthenticationToken> getAuthentication(final String token) {
+    private Claims getClaims(final String token) {
         try {
-            final Claims claims = Jwts.parser().setSigningKey(SecurityConstants.SECRET).parseClaimsJws(token).getBody();
-            return Optional.ofNullable(claims.getSubject()).map(JwtAuthorizationFilter::tokenForUserName);
+            return Jwts.parser().setSigningKey(SecurityConstants.SECRET).parseClaimsJws(token).getBody();
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage(), e);
-            return Optional.empty();
+            return null;
         }
     }
 
     private static UsernamePasswordAuthenticationToken tokenForUserName(final String username) {
         return new UsernamePasswordAuthenticationToken(username, null, Collections.singleton((GrantedAuthority) () -> "USER"));
+    }
+
+    private static boolean needsRenewal(final Claims claims) {
+        // provide user with new token when in the second half of its valid period
+        return new Date().getTime() > (claims.getExpiration().getTime() + claims.getIssuedAt().getTime())/2;
     }
 }
