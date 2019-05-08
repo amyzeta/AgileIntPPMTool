@@ -93,13 +93,13 @@ WriteProject.propTypes = {
   title: PropTypes.string.isRequired,
   canModifyIdentifier: PropTypes.bool.isRequired,
   project: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
+  errors: PropTypes.object,
   submitProject: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   project: state.project.project,
-  errors: state.errors
+  errors: state.request.errors
 });
 
 export default connect(

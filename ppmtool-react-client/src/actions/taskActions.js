@@ -7,21 +7,17 @@ const makeRequest = (projectId, action, actionFn, history) => dispatch => {
   handleRequest(dispatch, action, requestFn, () => history && history.push(`/taskBoard/${projectId}`));
 };
 
-export const addTask = (projectId, task, history) => {
-  return makeRequest(projectId, ADD_TASK, urlRoot => axios.post(urlRoot, task), history);
-};
+export const addTask = (projectId, task, history) =>
+  makeRequest(projectId, ADD_TASK, urlRoot => axios.post(urlRoot, task), history);
 
-export const getTask = (projectId, taskId) => {
-  return makeRequest(projectId, GET_TASK, urlRoot => axios.get(`${urlRoot}/${taskId}`));
-};
+export const getTask = (projectId, taskId) =>
+  makeRequest(projectId, GET_TASK, urlRoot => axios.get(`${urlRoot}/${taskId}`));
 
-export const getTasks = projectId => {
-  return makeRequest(projectId, GET_TASKS, urlRoot => axios.get(urlRoot));
-};
+export const getTasks = projectId => makeRequest(projectId, GET_TASKS, urlRoot => axios.get(urlRoot));
 
-export const updateTask = (projectId, task, history) => {
-  return makeRequest(projectId, UPDATE_TASK, urlRoot => axios.put(`${urlRoot}/${task.id}`, task), history);
-};
+export const updateTask = (projectId, task, history) =>
+  makeRequest(projectId, UPDATE_TASK, urlRoot => axios.put(`${urlRoot}/${task.id}`, task), history);
+
 export const deleteTask = (projectId, taskId) => {
   if (!window.confirm('Are you sure you want to to delete this task?')) {
     return;

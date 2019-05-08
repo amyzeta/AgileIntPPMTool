@@ -4,6 +4,7 @@ import CreateProjectButton from './Project/CreateProjectButton';
 import { connect } from 'react-redux';
 import { getProjects } from '../actions/projectActions';
 import { PropTypes } from 'prop-types';
+import LoadableComponent from './LoadableComponent';
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -12,22 +13,24 @@ class Dashboard extends Component {
   render() {
     const projects = this.props.projects;
     return (
-      <div className="projects">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              <h1 className="display-4 text-center">Projects</h1>
-              <br />
-              <CreateProjectButton />
-              <br />
-              <hr />
-              {projects.map((p, i) => (
-                <ProjectItem project={p} key={i} />
-              ))}
+      <LoadableComponent>
+        <div className="projects">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12">
+                <h1 className="display-4 text-center">Projects</h1>
+                <br />
+                <CreateProjectButton />
+                <br />
+                <hr />
+                {projects.map((p, i) => (
+                  <ProjectItem project={p} key={i} />
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </LoadableComponent>
     );
   }
 }

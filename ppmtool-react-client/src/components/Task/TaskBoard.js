@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { getTasks } from '../../actions/taskActions';
 import TaskBoardColumn from './TaskBoardColumn';
 import { mapToElements } from '../ComponentUtilities';
+import LoadableComponent from '../LoadableComponent';
 
 class TaskBoard extends Component {
   constructor(props) {
@@ -19,31 +20,30 @@ class TaskBoard extends Component {
   }
 
   render() {
-    if (this.props.isFetching) {
-      return (
+    return (
+      <LoadableComponent>
         <div className="container">
-          <i className="fas fa-spinner fa-spin" role="status" />
-        </div>
-      );
-    }
-    const isEmpty = o => !o || Object.keys(o).length === 0;
-    const errors = this.props.errors;
-    if (!isEmpty(errors)) {
-      return mapToElements(errors, (key, value) => {
-        return (
-          <div className="alert alert-danger text-center" key={key} role="alert">
-            {value}
+          <Link to={`/taskBoard/${this.state.projectId}/addTask`} className="btn btn-primary mb-3">
+            <i className="fas fa-plus-circle"> Create Project Task</i>
+          </Link>
+          <br />
+          <hr />
+          <div className="container">
+            <div className="row">{this.taskColumns()}</div>
           </div>
-        );
-      });
-    }
-    const tasks = this.props.tasks;
+        </div>
+      </LoadableComponent>
+    );
+  }
+
+  taskColumns() {
     const statusToClasses = {
       TO_DO: 'bg-secondary text-white',
       IN_PROGRESS: 'bg-primary text-white',
       DONE: 'bg-success text-white'
     };
-    const columns = mapToElements(statusToClasses, (status, classes) => {
+    const tasks = this.props.tasks;
+    return mapToElements(statusToClasses, (status, classes) => {
       return (
         <TaskBoardColumn
           key={status}
@@ -54,18 +54,6 @@ class TaskBoard extends Component {
         />
       );
     });
-    return (
-      <div className="container">
-        <Link to={`/taskBoard/${this.state.projectId}/addTask`} className="btn btn-primary mb-3">
-          <i className="fas fa-plus-circle"> Create Project Task</i>
-        </Link>
-        <br />
-        <hr />
-        <div className="container">
-          <div className="row">{columns}</div>
-        </div>
-      </div>
-    );
   }
 }
 

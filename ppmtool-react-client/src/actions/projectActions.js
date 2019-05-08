@@ -1,56 +1,29 @@
 import axios from 'axios';
-import { GET_ERRORS, GET_PROJECTS, GET_PROJECT, DELETE_PROJECT } from './types';
+import handleRequest from './request';
+import { GET_PROJECTS, GET_PROJECT, DELETE_PROJECT } from './types';
 
-const URL_ROOT = '/api/project';
-
-const writeProject = (doRequest, history) => async dispatch => {
-  try {
-    await doRequest();
-    history.push('/dashboard');
-    dispatch({
-      type: GET_ERRORS,
-      payload: {}
-    });
-  } catch (error) {
-    dispatch({
-      type: GET_ERRORS,
-      payload: error.response.data
-    });
-  }
+const makeRequest = (action, actionFn, history) => dispatch => {
+  handleRequest(dispatch, action, () => actionFn('/api/project'), () => history && history.push('/dashboard'));
 };
-export const createProject = (project, history) =>
-  writeProject(() => axios.post(URL_ROOT, project), history);
+
+export const createProject = (project, history) => makeRequest(null, urlRoot => axios.post(urlRoot, project), history);
 
 export const updateProject = (project, history) =>
-  writeProject(() => axios.put(`${URL_ROOT}/${project.id}`, project), history);
+  makeRequest(null, urlRoot => axios.put(`${urlRoot}/${project.id}`, project), history);
 
-export const getProjects = () => async dispatch => {
-  const res = await axios.get(URL_ROOT);
-  dispatch({
-    type: GET_PROJECTS,
-    payload: res.data
-  });
-};
+export const getProjects = () => makeRequest(GET_PROJECTS, urlRoot => axios.get(urlRoot));
 
-export const getProject = (id, history) => async dispatch => {
-  try {
-    const res = await axios.get(`${URL_ROOT}/${id}`);
-    dispatch({
-      type: GET_PROJECT,
-      payload: res.data
-    });
-  } catch (error) {
-    history.push('/dashboard');
-  }
-};
+export const getProject = (id, history) => makeRequest(GET_PROJECT, urlRoot => axios.get(`${urlRoot}/${id}`));
 
-export const deleteProject = id => async dispatch => {
+export const deleteProject = id => {
   if (!window.confirm('Are you sure you want to to delete this project?')) {
     return;
   }
-  await axios.delete(`${URL_ROOT}/${id}`);
-  dispatch({
-    type: DELETE_PROJECT,
-    payload: id
-  });
+  return makeRequest(DELETE_PROJECT, urlRoot =>
+    axios.delete(`${urlRoot}/${id}`).then(() => {
+      return {
+        data: id
+      };
+    })
+  );
 };
